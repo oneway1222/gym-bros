@@ -33,48 +33,45 @@ const SignUp = () => {
   };
 
   const onSubmit = (e) => {
-    password === confirmPassword
-      ? axios
-          .post("http://localhost:3000/auth", {
-            first_name: firstname,
-            last_name: lastname,
-            email: email,
-            password: password,
-            password_confirmation: confirmPassword,
-          })
-          .then(function (response) {
-            console.log("resp from sign in endpoint", response);
-            response = {
-              status: "success",
-              data: {
-                id: 5,
-                provider: "email",
-                uid: "test@gmail.com",
-                allow_password_change: false,
-                first_name: "hangill",
-                last_name: "chong",
-                email: "test@gmail.com",
-                created_at: "2023-10-29T22:32:15.124Z",
-                updated_at: "2023-10-29T22:32:15.230Z",
-                goal: null,
-                gender: null,
-                age: null,
-                height_in_feet: null,
-                height_in_inches: null,
-                weight: null,
-              },
-            };
-            if (response.status === "success") {
-              const newUserData = response.data;
-              // navigate to /login
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          })
-      : alert("Check your password");
     e.preventDefault();
-    console.log(firstname, lastname, email, password, confirmPassword);
+    axios
+      .post("http://localhost:3000/auth", {
+        first_name: firstname,
+        last_name: lastname,
+        email: email,
+        password: password,
+        password_confirmation: confirmPassword,
+      })
+      .then(function (response) {
+        console.log("resp from sign in endpoint", response);
+        /*response = {
+          status: "success",
+          data: {
+            id: 5,
+            provider: "email",
+            uid: "test@gmail.com",
+            allow_password_change: false,
+            first_name: "hangill",
+            last_name: "chong",
+            email: "test@gmail.com",
+            created_at: "2023-10-29T22:32:15.124Z",
+            updated_at: "2023-10-29T22:32:15.230Z",
+            goal: null,
+            gender: null,
+            age: null,
+            height_in_feet: null,
+            height_in_inches: null,
+            weight: null,
+          },
+        };*/
+        if (response.data.status === "success") {
+          const newUserData = response.data.data;
+          navigate("/login", { state: { email: newUserData.email } });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -121,6 +118,7 @@ const SignUp = () => {
         type="password"
         value={confirmPassword}
         placeholder="Confirm your password"
+        required
         onChange={onChange}
       />
       <br />

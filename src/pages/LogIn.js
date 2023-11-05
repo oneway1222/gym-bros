@@ -1,10 +1,12 @@
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
-import {Link} from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 
 const LogIn = () => {
-  const [email, setEmail] = useState("");
+  const { state } = useLocation();
+
+  const [email, setEmail] = useState(state?.email || "");
   const [password, setPassword] = useState("");
 
   const onChange = (e) => {
@@ -14,6 +16,7 @@ const LogIn = () => {
   };
 
   const onSubmit = (e) => {
+    e.preventDefault();
     axios
       .post("http://localhost:3000/auth/sign_in", {
         email: email,
@@ -21,13 +24,14 @@ const LogIn = () => {
       })
       .then(function (response) {
         console.log("resp from sign in endpoint", response);
+        localStorage.setItem("Token", JSON.stringify(response.data.token))
+        localStorage.setItem("User", JSON.stringify(response.data.user))
+        // navigate to main page!
       })
       .catch((error) => {
         console.error(error);
       });
-
-    e.preventDefault();
-    console.log(email, password);
+ 
   };
 
   return (
