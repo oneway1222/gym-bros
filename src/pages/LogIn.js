@@ -1,9 +1,10 @@
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const LogIn = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
 
   const [email, setEmail] = useState(state?.email || "");
@@ -24,14 +25,14 @@ const LogIn = () => {
       })
       .then(function (response) {
         console.log("resp from sign in endpoint", response);
-        localStorage.setItem("Token", JSON.stringify(response.data.token))
-        localStorage.setItem("User", JSON.stringify(response.data.user))
-        // navigate to main page!
+        localStorage.setItem("Token", JSON.stringify(response.data.token));
+        localStorage.setItem("User", JSON.stringify(response.data.user));
+        
+        navigate("/")
       })
       .catch((error) => {
         console.error(error);
       });
- 
   };
 
   return (
