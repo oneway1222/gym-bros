@@ -10,6 +10,19 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+
+  const validateEmail = (inputText) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
+    if (!inputText || inputText.length == 0) {
+      setEmailErrorMessage("Email is required!");
+    } else {
+      !emailRegex.test(inputText)
+        ? setEmailErrorMessage("Envalid email!")
+        : setEmailErrorMessage("");
+    }
+  };
 
   const onChange = (e) => {
     const targetId = e.target.id;
@@ -22,6 +35,7 @@ const SignUp = () => {
         break;
       case "email":
         setEmail(e.target.value);
+        validateEmail(e.target.value);
         break;
       case "password":
         setPassword(e.target.value);
@@ -96,13 +110,13 @@ const SignUp = () => {
       <br />
       <input
         id="email"
-        type="email"
+        type="text"
         value={email}
         placeholder="Enter your email"
-        required
         onChange={onChange}
+        onBlur={() => validateEmail(email)}
       />
-      <br />
+      <p>{emailErrorMessage}</p>
       <input
         id="password"
         type="password"

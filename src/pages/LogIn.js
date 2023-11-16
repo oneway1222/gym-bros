@@ -9,11 +9,29 @@ const LogIn = () => {
 
   const [email, setEmail] = useState(state?.email || "");
   const [password, setPassword] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+
+  const validateEmail = (inputText) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
+    if (!inputText || inputText.length == 0) {
+      setEmailErrorMessage("Email is required!");
+    } else {
+      !emailRegex.test(inputText)
+        ? setEmailErrorMessage("Envalid email!")
+        : setEmailErrorMessage("");
+    }
+  };
 
   const onChange = (e) => {
-    e.target.id === "email"
+    if (e.target.id === "email") {
+      setEmail(e.target.value);
+      validateEmail(e.target.value);
+    }
+
+    /*e.target.id === "email"
       ? setEmail(e.target.value)
-      : setPassword(e.target.value);
+      : setPassword(e.target.value);*/
   };
 
   const onSubmit = (e) => {
@@ -27,8 +45,8 @@ const LogIn = () => {
         console.log("resp from sign in endpoint", response);
         localStorage.setItem("Token", JSON.stringify(response.data.token));
         localStorage.setItem("User", JSON.stringify(response.data.user));
-        
-        navigate("/")
+
+        navigate("/");
       })
       .catch((error) => {
         console.error(error);
@@ -40,12 +58,13 @@ const LogIn = () => {
       <form onSubmit={onSubmit}>
         <input
           id="email"
-          type="email"
+          type="text"
           value={email}
           placeholder="Enter your email"
-          required
           onChange={onChange}
+          onBlur={() => validateEmail(email)}
         />
+        <p>{emailErrorMessage}</p>
         <br />
         <input
           id="password"
