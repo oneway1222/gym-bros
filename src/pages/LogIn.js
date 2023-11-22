@@ -10,6 +10,7 @@ const LogIn = () => {
   const [email, setEmail] = useState(state?.email || "");
   const [password, setPassword] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const validateEmail = (inputText) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -23,15 +24,68 @@ const LogIn = () => {
     }
   };
 
+  const validatePassword = (inputText) => {
+    const passwordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+
+    if (!inputText || inputText.length == 0) {
+      setPasswordErrorMessage("Password is required!");
+    } else {
+      !passwordRegex.test(inputText)
+        ? setPasswordErrorMessage("Envalid password!")
+        : setPasswordErrorMessage("");
+    }
+
+    /*    Need to update password validation !
+ 
+    const isNonWhiteSpace = /^\S*$/;
+    if (!isNonWhiteSpace.test(inputText)) {
+      setPasswordErrorMessage("Password must not contain Whitespaces.")
+    }
+  
+    const isContainsUppercase = /^(?=.*[A-Z]).*$/;
+    if (!isContainsUppercase.test(inputText)) {
+      setPasswordErrorMessage("Password must have at least one Uppercase Character.")
+    }
+      
+    
+    const isContainsLowercase = /^(?=.*[a-z]).*$/;
+    if (!isContainsLowercase.test(inputText)) {
+      setPasswordErrorMessage("Password must have at least one Lowercase Character.")
+    }
+  
+    const isContainsNumber = /^(?=.*[0-9]).*$/;
+    if (!isContainsNumber.test(inputText)) {
+      setPasswordErrorMessage("Password must contain at least one Digit.")
+    }
+  
+    const isContainsSymbol =
+      /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).*$/;
+    if (!isContainsSymbol.test(inputText)) {
+      setPasswordErrorMessage("Password must contain at least one Special Symbol.")
+    }
+  
+    const isValidLength = /^.{10,16}$/;
+    if (!isValidLength.test(inputText)) {
+      setPasswordErrorMessage("Password must be 10-16 Characters Long.")
+    }
+
+    else{
+      setPasswordErrorMessage("")
+
+    }
+ 
+  */
+  };
+
   const onChange = (e) => {
     if (e.target.id === "email") {
       setEmail(e.target.value);
       validateEmail(e.target.value);
+    } else {
+      setPassword(e.target.value);
+      validatePassword(e.target.value);
     }
-
-    /*e.target.id === "email"
-      ? setEmail(e.target.value)
-      : setPassword(e.target.value);*/
   };
 
   const onSubmit = (e) => {
@@ -71,10 +125,10 @@ const LogIn = () => {
           type="password"
           value={password}
           placeholder="Enter your password"
-          required
-          pattern="(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}" //Password contains at least one symbol, number, upper case letter and lower case letter with minimum 8 lengths
           onChange={onChange}
+          onBlur={() => validatePassword(password)}
         />
+        <p>{passwordErrorMessage}</p>
         <br />
         <input type="submit" value="Submit" />
       </form>

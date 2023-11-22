@@ -11,6 +11,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const validateEmail = (inputText) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -21,6 +22,19 @@ const SignUp = () => {
       !emailRegex.test(inputText)
         ? setEmailErrorMessage("Envalid email!")
         : setEmailErrorMessage("");
+    }
+  };
+
+  const validatePassword = (inputText) => {
+    const passwordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+
+    if (!inputText || inputText.length == 0) {
+      setPasswordErrorMessage("Password is required!");
+    } else {
+      !passwordRegex.test(inputText)
+        ? setPasswordErrorMessage("Envalid password!")
+        : setPasswordErrorMessage("");
     }
   };
 
@@ -39,6 +53,7 @@ const SignUp = () => {
         break;
       case "password":
         setPassword(e.target.value);
+        validatePassword(e.target.value);
         break;
       case "confirmPassword":
         setConfirmPassword(e.target.value);
@@ -122,10 +137,11 @@ const SignUp = () => {
         type="password"
         value={password}
         placeholder="Enter your password"
-        pattern="(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}" //Password contains at least one symbol, number, upper case letter and lower case letter with minimum 8 lengths
         required
         onChange={onChange}
+        onBlur={() => validatePassword(password)}
       />
+      <p>{passwordErrorMessage}</p>
       <br />
       <input
         id="confirmPassword"
